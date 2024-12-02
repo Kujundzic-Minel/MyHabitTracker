@@ -9,8 +9,6 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
     "format": "prettier --write src/"
   },
   "dependencies": {
