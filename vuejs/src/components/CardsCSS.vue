@@ -7,7 +7,7 @@ defineProps({
   <div>
     <h2>Progrès :</h2>
     <div class="progressBar__BG">
-      <div class="progressBar__Fill" :style="{'--WidthProgress': `${progressHabit}%`}"></div>
+      <div class="progressBar__Fill" :style="{'--WidthProgress': `${progressHabit}%`}"/>
     </div>
   </div>
 </template>

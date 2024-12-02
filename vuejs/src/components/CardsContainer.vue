@@ -28,7 +28,7 @@ const habits = [
   <div>
     <div v-for="habit in habits" :key="habit.id">
       <HabitsCard :name="habit.name" :description="habit.description" />
-      <CardsCSS :progressHabit="habit.progressHabit" />
+      <CardsCSS :progress-habit="habit.progressHabit" />
     </div>
   </div>
 </template>
