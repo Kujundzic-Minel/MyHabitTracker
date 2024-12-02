@@ -4,13 +4,13 @@
     <form>
       <div class="form-group">
         <label for="name">Nom de l'habitude :</label>
-        <input
+        <textarea
           id="name"
           v-model="name"
           type="text"
           placeholder="Entrez le nom de l'habitude"
           required
-        >
+        ></textarea>
       </div>
       <div class="form-group">
         <label for="description">Description :</label>

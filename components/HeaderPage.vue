@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
-</script>
+<script setup lang="ts"></script>
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/addHabit">Add habit</RouterLink>
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/addHabit">Add habit</NuxtLink>
     </nav>
   </header>
 </template>

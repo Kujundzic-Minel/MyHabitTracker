@@ -1,7 +1,13 @@
-<script setup lang="ts">
+<script setup>
 defineProps({
-  name: String,
-  description: String,
+  name: {
+    type: String,
+    default: 'Nom par défaut',
+  },
+  description: {
+    type: String,
+    default: 'Description par défaut', 
+  },
 })
 </script>
 

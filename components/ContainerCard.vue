@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Habits from '@/components/CardHabits.vue'
+
 const habits = [
   {
     id: 1,
@@ -16,8 +18,6 @@ const habits = [
     description: 'Description 3',
   },
 ]
-
-import Habits from '@/components/CardHabits.vue'
 </script>
 <template>
   <div class="containerCard__grid">
