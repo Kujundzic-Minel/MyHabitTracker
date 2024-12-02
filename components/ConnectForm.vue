@@ -2,18 +2,18 @@
   <form class="contact-form">
     <CustomInput
       id="email"
+      v-model="email"
       label="Email"
       placeholder="Entrez votre email"
       variant="primary"
-      v-model="email"
     />
     <CustomInput
       id="password"
+      v-model="password"
       label="Mot de passe"
       placeholder="Entrez votre mot de passe"
       variant="primary"
       type="password"
-      v-model="password"
     />
     <button class="submit-button">Envoyer</button>
   </form>
@@ -58,7 +58,7 @@ export default defineComponent({
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: (#004BFF);
+    background-color: (#004bff);
   }
 }
 </style>

@@ -38,8 +38,8 @@ export default defineComponent({
     <button
       class="counter-button"
       :disabled="disabled"
-      @click="decrease"
       :class="{ 'counter-button--disabled': disabled }"
+      @click="decrease"
     >
       -
     </button>
@@ -47,14 +47,13 @@ export default defineComponent({
     <button
       class="counter-button"
       :disabled="disabled"
-      @click="increase"
       :class="{ 'counter-button--disabled': disabled }"
+      @click="increase"
     >
       +
     </button>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 .counter {
@@ -73,9 +72,7 @@ export default defineComponent({
   background: none;
   border: none;
   padding: 0;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   margin: 0 10px;
   font-family: $primaryFont;
   color: $primaryColor;

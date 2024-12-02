@@ -5,12 +5,12 @@
       <div class="form-group">
         <label for="name">Nom de l'habitude :</label>
         <input
-          type="text"
           id="name"
           v-model="name"
+          type="text"
           placeholder="Entrez le nom de l'habitude"
           required
-        />
+        >
       </div>
       <div class="form-group">
         <label for="description">Description :</label>
@@ -95,7 +95,7 @@ export default defineComponent({
     cursor: pointer;
 
     &:hover {
-      background-color: (#004BFF);
+      background-color: (#004bff);
     }
   }
 

@@ -8,7 +8,7 @@
       :disabled="disabled"
       @change="handleChange"
     />
-    <label :for="id" class="l-checkbox__box s-checkbox"></label>
+    <label :for="id" class="l-checkbox__box s-checkbox" />
   </div>
 </template>
 
@@ -64,9 +64,7 @@ export default defineComponent({
     bottom: 0;
     background-color: $skyLight;
     border-radius: 10%;
-    transition:
-      background-color 0.3s,
-      border 0.3s;
+    transition: background-color 0.3s, border 0.3s;
 
     &:after {
       content: '';
