@@ -13,5 +13,6 @@ export default withNuxt({
         },
       },
     ],
+    'vue/require-default-prop': 'warn',
   },
 })
