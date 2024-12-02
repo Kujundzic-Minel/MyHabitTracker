@@ -1,4 +1,7 @@
 <script setup lang="ts"></script>
 <template>
-  <div>Page d'accueil</div>
+  <div>
+    <div>Page d'accueil</div>
+    <Switch />
+  </div>
 </template>
