@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 <template>
-  <div>Habits</div>
-  <CardsContainer />
+  <div>
+    <div>Habits</div>
+    <CardsContainer />
+  </div>
 </template>
