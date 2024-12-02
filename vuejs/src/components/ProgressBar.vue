@@ -6,5 +6,5 @@ defineProps({
 
 <template>
   <h1>Progress bar</h1>
-  <progress id="habitProgress" max="100" :value="progressHabit"></progress>
+  <progress id="habitProgress" max="100" :value="progressHabit"/>
 </template>
