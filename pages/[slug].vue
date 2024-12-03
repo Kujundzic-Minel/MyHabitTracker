@@ -4,7 +4,7 @@ const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0]`
 const route = useRoute()
 const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
   slug: route.params.slug,
-})
+});
 </script>
 
 <template>
@@ -17,6 +17,9 @@ const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
           <SanityImage :asset-id="post.image.asset._ref" />
         </div>
       </div>
+    </div>
+    <div v-else>
+      <h1>Post not found</h1>
     </div>
   </main>
 </template>
