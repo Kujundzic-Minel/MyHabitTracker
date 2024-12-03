@@ -16,6 +16,7 @@ const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
         <div class="p-article-slug__image">
           <SanityImage :asset-id="post.image.asset._ref" />
         </div>
+        <p>{{ post.categories }}</p>
       </div>
     </div>
     <div v-else>
