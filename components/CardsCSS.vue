@@ -13,7 +13,7 @@ defineProps({
       <div
         class="progressBar__Fill"
         :style="{ '--WidthProgress': `${progressHabit}%` }"
-      ></div>
+      />
     </div>
   </div>
 </template>

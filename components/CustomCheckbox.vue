@@ -7,8 +7,8 @@
       :checked="checked"
       :disabled="disabled"
       @change="handleChange"
-    />
-    <label :for="id" class="l-checkbox__box s-checkbox"></label>
+    >
+    <label :for="id" class="l-checkbox__box s-checkbox"/>
   </div>
 </template>
 

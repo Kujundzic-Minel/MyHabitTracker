@@ -8,7 +8,7 @@
       :disabled="disabled"
       :value="modelValue"
       @input="handleInput"
-    />
+    >
   </div>
 </template>
 

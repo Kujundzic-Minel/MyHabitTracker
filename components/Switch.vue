@@ -1,8 +1,8 @@
 <template>
   <div class="l-switch">
     <label class="switch">
-      <input type="checkbox" :checked="checked" :disabled="disabled" @change="handleChange" />
-      <span :class="['slider', { round: rounded }]"></span>
+      <input type="checkbox" :checked="checked" :disabled="disabled" @change="handleChange" >
+      <span :class="['slider', { round: rounded }]"/>
     </label>
   </div>
 </template>

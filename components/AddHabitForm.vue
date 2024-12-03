@@ -10,7 +10,7 @@
           type="text"
           placeholder="Entrez le nom de l'habitude"
           required
-        ></textarea>
+        />
       </div>
       <div class="form-group">
         <label for="description">Description :</label>
@@ -19,7 +19,7 @@
           v-model="description"
           placeholder="Décrivez l'habitude"
           required
-        ></textarea>
+        />
       </div>
       <button type="button" class="submit-button">Ajouter l'Habitude</button>
     </form>
