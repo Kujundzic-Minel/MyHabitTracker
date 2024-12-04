@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
 import CustomInput from '../components/Input.vue'
 
 export default defineComponent({

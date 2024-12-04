@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import HabitsCard from '@/components/HabitsCard.vue'
-import CardsCSS from './CardsCSS.vue'
-
 const habits = [
   {
     id: 1,

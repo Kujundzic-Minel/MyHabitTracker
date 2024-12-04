@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import type { SanityDocument } from '@sanity/client'
-import useSanityImage from '~/assets/composables/useSanityImage';
 
+import useSanityImage from '~/assets/composables/useSanityImage';
 const { urlFor } = useSanityImage()
+
+
+useSeoMeta({
+  title: 'Blog | Habit tracker',
+  description: 'Retrouvez nos notes de mise à jour, nos astuces et nos conseils pour vous aider à atteindre vos objectifs.',
+})
 
 const selectCategory = ref('')
 

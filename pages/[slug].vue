@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SanityDocument } from '@sanity/client'
+
 const POST_QUERY = groq`
   *[_type == "post" && slug.current == $slug][0]{
     title,
@@ -12,6 +13,11 @@ const route = useRoute()
 const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
   slug: route.params.slug,
 });
+
+useSeoMeta({
+  title: `Blog | ${post.value?.title}`,
+  description: 'Retrouvez nos notes de mise à jour, nos astuces et nos conseils pour vous aider à atteindre vos objectifs.',
+})
 </script>
 
 <template>
