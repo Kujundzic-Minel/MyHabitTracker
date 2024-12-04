@@ -14,19 +14,10 @@ const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
   slug: route.params.slug,
 });
 
-const titleArticle = ref('')
-
 useSeoMeta({
   title: `Blog | ${post.value?.title}`,
   description: 'Retrouvez nos notes de mise à jour, nos astuces et nos conseils pour vous aider à atteindre vos objectifs.',
 })
-
-watchEffect(() => {
-  if (post.value && post.value.title) {
-    titleArticle.value = post.value.title
-  }
-})
-
 </script>
 
 <template>
