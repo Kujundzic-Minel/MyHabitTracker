@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import type { SanityDocument } from '@sanity/client'
+<<<<<<< Updated upstream
 import imageUrlBuilder from '@sanity/image-url'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset
     ? imageUrlBuilder({ projectId, dataset }).image(source)
     : null
+=======
+import useSanityImage from '~/assets/composables/useSanityImage';
+
+const { urlFor } = useSanityImage()
+
+useSeoMeta({
+  title: 'Blog | Habit tracker',
+  description: 'Retrouvez nos notes de mise à jour, nos astuces et nos conseils pour vous aider à atteindre vos objectifs.',
+})
+>>>>>>> Stashed changes
 
 const selectCategory = ref('')
 
@@ -32,7 +43,6 @@ const { data: categories } = await useSanityQuery<SanityDocument[]>(groq`*[_type
   title,
   slug
 }`)
-const { projectId, dataset } = useSanity().client.config()
 
 const { data: posts } = await useSanityQuery<SanityDocument[]>(groq`*[
   _type == "post"
