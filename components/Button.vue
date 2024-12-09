@@ -18,14 +18,13 @@ export default defineComponent({
     },
     text: {
       type: String,
-      default: '', // Texte par défaut
+      default: '', 
     },
   },
 })
 </script>
 
 <style lang="scss">
-/* SCSS/SASS */
 .button {
   font-size: 16px;
   padding: 0.5em 1em;
