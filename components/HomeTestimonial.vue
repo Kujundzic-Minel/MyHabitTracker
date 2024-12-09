@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import Hero from '~/components/Hero.vue';
-import HomeSubscription from '~/components/HomeSubscription.vue';
-import HomeFeature from '~/components/HomeFeature.vue';
-import HomeTestimonial from '~/components/HomeTestimonial.vue';
-import HomeFAQ from '~/components/HomeFAQ.vue';
-
 interface Homepage {
   title: string;
   hero: {
@@ -17,27 +11,23 @@ interface Homepage {
       value: string;
     }[];
   };
+  features: {
+    title: string;
+    text: string;
+    icon?: { asset: { url: string } };
+  }[];
   subscriptions: {
     title: string;
     description: string;
     price: string;
     features: string[];
-    cta?: { label: string; url: string };
-  }[];
-  features: {
-    title: string;
-    text: string;
-    icon?: { asset: { url: string } };
+    cta: { label: string; url: string };
   }[];
   testimonials: {
     name: string;
     role: string;
     feedback: string;
     photo?: { asset: { url: string } };
-  }[];
-  faq: {
-    question: string;
-    answer: string;
   }[];
 }
 
@@ -92,25 +82,16 @@ const { data: homepage } = await useSanityQuery<Homepage>(groq`
 }
 `);
 </script>
-
 <template>
-  <div v-if="homepage">
-    <!-- Titre Principal -->
-    <h1>{{ homepage.title }}</h1>
-
-    <!-- Section Hero -->
-    <Hero v-if="homepage.hero" :hero="homepage.hero" />
-
-    <!-- Section Subscriptions -->
-    <HomeSubscription v-if="homepage.subscriptions" :subscriptions="homepage.subscriptions" />
-
-    <!-- Section Features -->
-    <HomeFeature v-if="homepage.features" :features="homepage.features" />
-
-    <!-- Section Testimonials -->
-    <HomeTestimonial v-if="homepage.testimonials" :testimonials="homepage.testimonials" />
-
-    <!-- Section FAQ -->
-    <HomeFAQ v-if="homepage.faq" :faq="homepage.faq" />
-  </div>
+  <section v-if="homepage && homepage.testimonials">
+    <h2>Témoignages</h2>
+    <div v-for="testimonial in homepage.testimonials" :key="testimonial.name">
+      <div v-if="testimonial.photo">
+        <img :src="testimonial.photo.asset.url" :alt="testimonial.name" />
+      </div>
+      <h3>{{ testimonial.name }}</h3>
+      <p>{{ testimonial.role }}</p>
+      <blockquote>{{ testimonial.feedback }}</blockquote>
+    </div>
+  </section>
 </template>
