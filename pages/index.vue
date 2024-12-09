@@ -82,7 +82,6 @@ const { data: homepage } = await useSanityQuery<Homepage>(groq`
     question,
     answer
   },
-  metaDescription
 }
 `);
 </script>
