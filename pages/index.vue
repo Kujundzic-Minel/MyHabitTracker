@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import Hero from '~/components/Hero.vue';
-import HomeSubscription from '~/components/HomeSubscription.vue';
-import HomeFeature from '~/components/HomeFeature.vue';
-import HomeTestimonial from '~/components/HomeTestimonial.vue';
-import HomeFAQ from '~/components/HomeFAQ.vue';
-
 interface Homepage {
   title: string;
   hero: {
