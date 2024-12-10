@@ -68,6 +68,13 @@ const deleteHabit = async (id: number) => {
   }
 };
 
+
+// affichage du formulaire pour editer une habitude
+const show = ref(false)
+
+function toggleShow() {
+  show.value = !show.value;
+}
 </script>
 
 <template>
@@ -91,8 +98,12 @@ const deleteHabit = async (id: number) => {
         <ul>
           <li v-for="habit in dashboardData.personalHabits" :key="habit.id">
             <HabitsCard :name="habit.title" :description="habit.description" />
-            <DeleteButton :id="habit.id" @delete="deleteHabit" />
             <ProgressBarHabit :progress-habit="habit.success_rate" />
+            <DeleteButton :id="habit.id" @delete="deleteHabit" />
+            <EditButton @click="toggleShow" />
+            <div v-if="show">
+              <EditForm v-if="show" :habit-id="habit.id.toString()" />
+            </div>
           </li>
         </ul>
       </div>
