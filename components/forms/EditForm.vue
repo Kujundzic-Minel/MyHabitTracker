@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  habitId: string
+  habitid: string
 }>()
 
 const router = useRouter()
@@ -12,16 +12,16 @@ const onSubmit = async (event: Event) => {
   console.log('Form has submitted')
 
   try {
-    const response = await fetch(`http://localhost:4000/habits/${props.habitId}`, {
+    const response = await fetch(`http://localhost:4000/habits/${props.habitid}`, {
       method: 'PUT',
-      headers: {
+      headers: { 
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
       },
       body: JSON.stringify({
         title: nameEdit.value,
         description: descriptionEdit.value
-      })
+      }) 
     })
 
     if (!response.ok) {
@@ -42,85 +42,95 @@ const onSubmit = async (event: Event) => {
 </script>
 
 <template>
-  <div class="add-habit-form">
-    <h1>Ajouter une Nouvelle Habitude</h1>
-
-    <form @submit="onSubmit">
-      <div class="form-group">
-        <label for="name">Nom de l'habitude :</label>
-        <textarea id="name" v-model="nameEdit" type="text" placeholder="Entrez le nouveau nom de l'habitude" required />
+  <div class="edit-form">
+    <h2 class="edit-form__title">Modifier l'habitude</h2>
+    <form @submit="onSubmit" class="edit-form__form">
+      <div class="edit-form__group">
+        <label class="edit-form__label" for="name">Nom de l'habitude</label>
+        <textarea 
+          id="name" 
+          v-model="nameEdit" 
+          class="edit-form__textarea"
+          placeholder="Entrez le nouveau nom de l'habitude" 
+          required 
+        />
       </div>
-      <div class="form-group">
-        <label for="description">Description :</label>
-        <textarea id="description" v-model="descriptionEdit" placeholder="Décrivez la nouvelle habitude" required />
+      <div class="edit-form__group">
+        <label class="edit-form__label" for="description">Description</label>
+        <textarea 
+          id="description" 
+          v-model="descriptionEdit" 
+          class="edit-form__textarea"
+          placeholder="Décrivez la nouvelle habitude" 
+          required 
+        />
       </div>
-      <button type="submit" class="submit-button">Modifier l'Habitude</button>
+      <button type="submit" class="edit-form__submit">Modifier l'habitude</button>
     </form>
   </div>
 </template>
 
-<style lang="scss">
-.add-habit-form {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+<style lang="scss" scoped>
+@import '~/assets/scss/main.scss';
 
-  h1 {
+.edit-form {
+  @include form-container;
+
+  &__title {
+    font-family: $font-family-primary;
+    font-weight: $font-weight-semibold;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    color: $textPrimary;
+    margin-bottom: 2rem;
     text-align: center;
   }
 
-  .form-group {
-    margin-bottom: 1rem;
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
+  &__label {
+    font-family: $font-family-primary;
+    font-weight: $font-weight-medium;
+    color: $textPrimary;
+  }
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
+  &__input, &__textarea {
+    padding: 0.75rem;
+    border: 1px solid $borderColor;
+    border-radius: 8px;
+    font-family: $font-family-primary;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 
-    textarea {
-      resize: vertical;
+    &:focus {
+      border-color: $primaryColor;
+      outline: none;
     }
   }
 
-  .submit-button {
+  &__textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  &__submit {
     width: 100%;
     padding: 0.75rem;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
+    background-color: $primaryColor;
+    color: $backgroundColor;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-family: $font-family-primary;
+    font-weight: $font-weight-medium;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: (#004bff);
-    }
-  }
-
-  .link {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: #007bff;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
+      background-color: $primaryDark;
     }
   }
 }

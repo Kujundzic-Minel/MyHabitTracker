@@ -38,85 +38,92 @@ const onSubmit = async (event: Event) => {
 </script>
 
 <template>
-  <div class="add-habit-form">
-    <h1>Ajouter une Nouvelle Habitude</h1>
-
-    <form @submit="onSubmit">
-      <div class="form-group">
-        <label for="name">Nom de l'habitude :</label>
-        <textarea id="name" v-model="name" type="text" placeholder="Entrez le nom de l'habitude" required />
+  <div class="habit-form">
+    <h2 class="habit-form__title">Ajouter une Nouvelle Habitude</h2>
+    <form @submit="onSubmit" class="habit-form__form">
+      <div class="habit-form__group">
+        <label class="habit-form__label" for="name">Nom de l'habitude</label>
+        <textarea 
+          id="name" 
+          v-model="name" 
+          class="habit-form__textarea"
+          placeholder="Entrez le nom de l'habitude" 
+          required 
+        />
       </div>
-      <div class="form-group">
-        <label for="description">Description :</label>
-        <textarea id="description" v-model="description" placeholder="Décrivez l'habitude" required />
+      <div class="habit-form__group">
+        <label class="habit-form__label" for="description">Description</label>
+        <textarea 
+          id="description" 
+          v-model="description" 
+          class="habit-form__textarea"
+          placeholder="Décrivez l'habitude" 
+          required 
+        />
       </div>
-      <button type="submit" class="submit-button">Ajouter l'Habitude</button>
+      <button type="submit" class="habit-form__submit">Ajouter l'Habitude</button>
     </form>
   </div>
 </template>
 
-<style lang="scss">
-.add-habit-form {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+<style lang="scss" scoped>
+@import '~/assets/scss/main.scss';
 
-  h1 {
+.habit-form {
+  @include form-container;
+
+  &__title {
+    font-family: $font-family-primary;
+    font-weight: $font-weight-semibold;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    color: $textPrimary;
+    margin-bottom: 2rem;
     text-align: center;
   }
 
-  .form-group {
-    margin-bottom: 1rem;
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
+  &__label {
+    font-family: $font-family-primary;
+    font-weight: $font-weight-medium;
+    color: $textPrimary;
+  }
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
+  &__textarea {
+    padding: 0.75rem;
+    border: 1px solid $borderColor;
+    border-radius: 8px;
+    font-family: $font-family-primary;
+    font-size: 1rem;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
 
-    textarea {
-      resize: vertical;
+    &:focus {
+      border-color: $primaryColor;
+      outline: none;
     }
   }
 
-  .submit-button {
+  &__submit {
     width: 100%;
     padding: 0.75rem;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
+    background-color: $primaryColor;
+    color: $backgroundColor;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-family: $font-family-primary;
+    font-weight: $font-weight-medium;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: (#004bff);
-    }
-  }
-
-  .link {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: #007bff;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
+      background-color: $primaryDark;
     }
   }
 }

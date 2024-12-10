@@ -13,7 +13,7 @@ const route = useRoute()
 const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
   slug: route.params.slug,
 });
-
+ 
 useSeoMeta({
   title: `Blog | ${post.value?.title}`,
   description: 'Retrouvez nos notes de mise à jour, nos astuces et nos conseils pour vous aider à atteindre vos objectifs.',
@@ -21,152 +21,110 @@ useSeoMeta({
 </script>
 
 <template>
-  <main>
-    <div v-if="post">
-      <h1>{{ post.title }}</h1>
-      <div class="p-article-slug">
-        <SanityContent v-bind="{ blocks: post.body }" />
-        <div class="p-article-slug__image">
-          <SanityImage :asset-id="post.image.asset._ref" />
+  <div class="article-page">
+    <main class="article-page__main">
+      <article v-if="post" class="article">
+        <h1 class="article__title">{{ post.title }}</h1>
+        <div class="article__content">
+          <SanityContent v-bind="{ blocks: post.body }" class="article__body" />
+          <div class="article__image">
+            <SanityImage :asset-id="post.image.asset._ref" />
+          </div>
+          <div class="article__categories">
+            <span class="article__categories-label">Catégories :</span>
+            <span v-for="(category, i) in post.categories" :key="i" class="article__category">
+              {{ category }}<span v-if="i < post.categories.length - 1">, </span>
+            </span>
+          </div>
         </div>
-        <p>
-          Catégories :
-          <span v-for="(category, i) in post.categories" :key="i">
-            {{ category }}<span v-if="i < post.categories.length - 1">, </span>
-          </span>
-        </p>
+      </article>
+      <div v-else class="article-page__error">
+        <h1>Post not found</h1>
       </div>
-    </div>
-    <div v-else>
-      <h1>Post not found</h1>
-    </div>
-  </main>
+    </main>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-/* Variables */
-$primaryColor: #6b4eff;
-$primaryDark: #5538ee;
-$skyLight: #e3e5e5;
-$darkLight: #979c9e;
-$darkDark: #303437;
+.article-page {
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
+  max-width: 1200px;
+  margin: 0 auto;
 
-$primaryFont: 'Inter', sans-serif;
-
-/* Mixin for responsive design */
-@mixin respond-to($breakpoint) {
-  @if $breakpoint =='small' {
-    @media (max-width: 600px) {
-      @content;
-    }
+  &__main {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
-  @else if $breakpoint =='medium' {
-    @media (min-width: 601px) and (max-width: 1024px) {
-      @content;
-    }
-  }
-
-  @else if $breakpoint =='large' {
-    @media (min-width: 1025px) {
-      @content;
-    }
+  &__error {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+    padding: 2rem;
   }
 }
 
-/* General Styles */
-main {
-  font-family: $primaryFont;
-  background-color: $skyLight;
-  color: $darkDark;
-  padding: 20px;
+.article {
+  font-family: 'Poppins', sans-serif;
 
-  h1 {
-    font-size: 2rem;
-    color: $primaryDark;
-    margin-bottom: 20px;
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2rem;
     text-align: center;
   }
 
-  .p-article-slug {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  &__content {
     max-width: 800px;
     margin: 0 auto;
+  }
 
-    &__image {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-width: 400px;
-      /* Maximum size for larger screens */
-      height: auto;
-      border-radius: 10px;
-      overflow: hidden;
+  &__body {
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 2rem;
 
-      img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-      }
+    h2 {
+      font-size: 1.8rem;
+      color: #2c3e50;
+      margin: 2rem 0 1rem;
     }
 
     p {
-      margin-top: 20px;
-      color: $darkLight;
-      font-size: 1rem;
-
-      span {
-        color: $darkDark;
-        font-weight: bold;
-      }
+      margin-bottom: 1.5rem;
     }
   }
-}
 
-/* Responsive Styles */
-@include respond-to('small') {
-  main {
-    padding: 10px;
-
-    h1 {
-      font-size: 1.5rem;
-    }
-
-    .p-article-slug {
-      padding: 10px;
-
-      &__image {
-        max-width: 300px;
-        /* Reduce size on smaller screens */
-      }
-
-      p {
-        font-size: 0.9rem;
-      }
+  &__image {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
     }
   }
-}
 
-@include respond-to('medium') {
-  .p-article-slug {
-    &__image {
-      max-width: 350px;
-      /* Medium screen size adjustment */
+  &__categories {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    
+    &-label {
+      font-weight: 500;
+      color: #2c3e50;
     }
   }
-}
 
-@include respond-to('large') {
-  .p-article-slug {
-    &__image {
-      max-width: 400px;
-      /* Larger screens get the largest image size */
-    }
+  &__category {
+    color: #3498db;
+    font-weight: 500;
   }
 }
 </style>

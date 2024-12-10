@@ -78,37 +78,139 @@ function toggleShow() {
 </script>
 
 <template>
-  <div>
-    <h1>Liste des habitudes</h1>
-    <p v-if="!dashboardData">Chargement des données...</p>
+  <div class="habits">
+    <h1 class="habits__title">Liste des habitudes</h1>
+    <p v-if="!dashboardData" class="habits__loading">Chargement des données...</p>
 
-    <div v-else>
-      <div v-if="Array.isArray(dashboardData.globalHabits)">
-        <h2>Habitudes Globales</h2>
-        <ul>
-          <li v-for="habit in dashboardData.globalHabits" :key="habit.id">
+    <div v-else class="habits__container">
+      <div v-if="Array.isArray(dashboardData.globalHabits)" class="habits__section">
+        <h2 class="habits__section-title">Habitudes Globales</h2>
+        <ul class="habits__list">
+          <li v-for="habit in dashboardData.globalHabits" :key="habit.id" class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
-            <ProgressBarHabit :progress-habit="habit.success_rate" />
-          </li>
-        </ul>
-      </div>
-
-      <div v-if="Array.isArray(dashboardData.personalHabits)">
-        <h2>Habitudes Personnelles</h2>
-        <ul>
-          <li v-for="habit in dashboardData.personalHabits" :key="habit.id">
-            <HabitsCard :name="habit.title" :description="habit.description" />
-            <ProgressBarHabit :progress-habit="habit.success_rate" />
-            <DeleteButton :id="habit.id" @delete="deleteHabit" />
-            <EditButton @click="toggleShow" />
-            <div v-if="show">
-              <EditForm v-if="show" :habit-id="habit.id.toString()" />
+            <div class="habits__progress">
+              <ProgressBarHabit :progress-habit="habit.success_rate" />
             </div>
           </li>
         </ul>
       </div>
 
-      <pre v-else>{{ JSON.stringify(dashboardData, null, 2) }}</pre>
+      <div v-if="Array.isArray(dashboardData.personalHabits)" class="habits__section">
+        <h2 class="habits__section-title">Habitudes Personnelles</h2>
+        <ul class="habits__list">
+          <li v-for="habit in dashboardData.personalHabits" :key="habit.id" class="habits__item">
+            <HabitsCard :name="habit.title" :description="habit.description" />
+            <div class="habits__actions">
+              <div class="habits__progress">
+                <ProgressBarHabit :progress-habit="habit.success_rate" />
+              </div>
+              <div class="habits__buttons">
+                <DeleteButton :id="habit.id" @delete="deleteHabit" />
+                <EditButton @click="toggleShow" />
+                <TrackingButton :id="habit.id" />
+              </div>
+            </div>
+            <div v-if="show" class="habits__edit-form">
+              <EditForm v-if="show" :habitid="habit.id.toString()" />
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
+
+<style lang="scss">
+.habits {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__title {
+    font-family: $font-family-primary;
+    font-size: 2rem;
+    font-weight: $font-weight-bold;
+    color: $textPrimary;
+    margin-bottom: 2rem;
+  }
+
+  &__loading {
+    font-family: $font-family-primary;
+    color: $textSecondary;
+    text-align: center;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &__section {
+    &-title {
+      font-family: $font-family-primary;
+      font-size: 1.5rem;
+      font-weight: $font-weight-semibold;
+      color: $textPrimary;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  &__item {
+    background: $backgroundColor;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px $shadowColor;
+    padding: 1.5rem;
+  }
+
+  &__actions {
+    margin-top: 1rem;
+  }
+
+  &__progress {
+    margin-bottom: 1rem;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__edit-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid $borderColor;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    &__title {
+      font-size: 1.5rem;
+    }
+
+    &__section-title {
+      font-size: 1.25rem;
+    }
+
+    &__list {
+      grid-template-columns: 1fr;
+    }
+
+    &__item {
+      padding: 1rem;
+    }
+  }
+}
+</style>

@@ -33,6 +33,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .subscription-section {
+  font-family: 'Poppins', sans-serif;
   padding: 2rem;
 
   h2 {
