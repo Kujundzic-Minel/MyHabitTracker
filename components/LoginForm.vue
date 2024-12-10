@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
+const router = useRouter();
 const username = ref('');
 const password = ref('');
 
@@ -26,13 +25,14 @@ const onSubmit = async (event: Event) => {
     if (data.token) {
       localStorage.setItem('token', data.token);
       console.log('Login successful');
+      await router.push('/app/dashboard');
     } else {
       console.error('Login failed');
     }
   } catch (error) {
     console.error('Error during login:', error);
   }
-  
+
 };
 </script>
 
