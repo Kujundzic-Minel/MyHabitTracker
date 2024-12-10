@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  habitId: string
+  habitid: string
 }>()
 
 const router = useRouter()
@@ -12,7 +12,7 @@ const onSubmit = async (event: Event) => {
   console.log('Form has submitted')
 
   try {
-    const response = await fetch(`http://localhost:4000/habits/${props.habitId}`, {
+    const response = await fetch(`http://localhost:4000/habits/${props.habitid}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
