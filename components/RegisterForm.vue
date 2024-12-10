@@ -1,29 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const username = ref('');
-const password = ref('');
+const router = useRouter()
+const username = ref('')
+const password = ref('')
 
 const onSubmit = async (event: Event) => {
   event.preventDefault();
   console.log('Form has submitted');
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
 
-  const responseRegister = await fetch('http://localhost:4000/auth/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
-  })
-  const data = await responseRegister.json();
-  console.log(data);
+  try {
+    const responseRegister = await fetch('http://localhost:4000/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value
+      })
+    });
+
+    const data = await responseRegister.json();
+    console.log(data);
+
+    const cookieJwt = useCookie('api_tracking_jwt')
+    cookieJwt.value = data.token
+
+    await router.push('/app/dashboard')
+
+  } catch (error) {
+    console.error("Erreur lors de l'inscription:", error)
+  }
 };
-
 </script>
 
 <template>
