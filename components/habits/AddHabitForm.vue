@@ -1,50 +1,59 @@
+<script setup lang="ts">
+const router = useRouter()
+const name = ref('')
+const description = ref('')
+
+const onSubmit = async (event: Event) => {
+  event.preventDefault()
+  console.log('Form has submitted')
+
+  try {
+    const response = await fetch('http://localhost:4000/habits', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
+      },
+      body: JSON.stringify({
+        title: name.value,
+        description: description.value
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log('Habit created:', data)
+
+    router.push('/app/dashboard')
+
+    name.value = ''
+    description.value = ''
+  } catch (error) {
+    console.error('Error creating habit:', error)
+  }
+}
+</script>
+
 <template>
   <div class="add-habit-form">
     <h1>Ajouter une Nouvelle Habitude</h1>
-    <form>
+
+    <form @submit="onSubmit">
       <div class="form-group">
         <label for="name">Nom de l'habitude :</label>
-        <textarea
-          id="name"
-          v-model="name"
-          type="text"
-          placeholder="Entrez le nom de l'habitude"
-          required
-        />
+        <textarea id="name" v-model="name" type="text" placeholder="Entrez le nom de l'habitude" required />
       </div>
       <div class="form-group">
         <label for="description">Description :</label>
-        <textarea
-          id="description"
-          v-model="description"
-          placeholder="Décrivez l'habitude"
-          required
-        />
+        <textarea id="description" v-model="description" placeholder="Décrivez l'habitude" required />
       </div>
-      <button type="button" class="submit-button">Ajouter l'Habitude</button>
+      <button type="submit" class="submit-button">Ajouter l'Habitude</button>
     </form>
-    <p>
-      <a href="/habits.html" class="link">Voir mes habitudes</a>
-    </p>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-
-export default defineComponent({
-  name: 'AddHabitForm',
-  setup() {
-    const name = ref('')
-    const description = ref('')
-
-    return {
-      name,
-      description,
-    }
-  },
-})
-</script>
 
 <style lang="scss">
 .add-habit-form {

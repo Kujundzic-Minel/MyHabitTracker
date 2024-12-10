@@ -10,10 +10,7 @@ defineProps({
   <div>
     <h2>Progrès :</h2>
     <div class="progressBar__BG">
-      <div
-        class="progressBar__Fill"
-        :style="{ '--WidthProgress': `${progressHabit}%` }"
-      />
+      <div class="progressBar__Fill" :style="{ '--WidthProgress': `${progressHabit}%` }" />
     </div>
   </div>
 </template>
@@ -30,14 +27,16 @@ defineProps({
 
 .progressBar__Fill {
   height: 100%;
-  background-color: blue;
+  background-color: $primaryColor;
   transition: width 0.3s ease;
   animation: forwards ProgressBarAnimation 1s cubic-bezier(0.99, 0, 0.27, 1);
 }
+
 @keyframes ProgressBarAnimation {
   from {
     width: 0;
   }
+
   to {
     width: var(--WidthProgress);
   }
