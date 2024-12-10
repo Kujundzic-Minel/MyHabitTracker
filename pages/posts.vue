@@ -11,7 +11,7 @@ useSeoMeta({
 })
 
 const selectCategory = ref('')
-
+ 
 const onCategoryClick = (categorySlug: string) => {
   if (selectCategory.value === categorySlug) {
     selectCategory.value = ''
@@ -54,255 +54,221 @@ const totalPages = computed(() => {
 </script>
 
 <template>
-  <div class="container">
-    <main>
-      <section class="categories">
-        <h1>Categories</h1>
-        <div class="categories-list">
-          <button v-for="category in categories" :key="category.slug.current"
-            :class="{ active: selectCategory === category.slug.current }"
+  <div class="posts-page">
+    <main class="posts-page__main">
+      <section class="posts-page__categories categories">
+        <h1 class="categories__title">Categories</h1>
+        <div class="categories__list">
+          <button 
+            v-for="category in categories" 
+            :key="category.slug.current"
+            :class="['categories__button', { 'categories__button--active': selectCategory === category.slug.current }]"
             @click="onCategoryClick(category.slug.current)">
             {{ category.title }}
           </button>
         </div>
       </section>
 
-      <section class="posts">
-        <h1>Posts</h1>
-        <div v-if="posts && posts.length" class="posts-list">
-          <div v-for="post in posts" :key="post._id" class="post-item">
-            <NuxtLink :to="`/${post.slug.current}`" class="post-link">
-              <h2 class="post-title">{{ post.title }}</h2>
-              <p class="post-date">{{ new Date(post.publishedAt).toLocaleDateString() }}</p>
-              <div v-if="post.categories && post.categories.length > 0" class="post-categories">
-                <span v-for="category in post.categories" :key="category.slug.current" class="post-category">
-                  <p>{{ category.title }}</p>
+      <section class="posts-page__content posts">
+        <h1 class="posts__title">Posts</h1>
+        <div v-if="posts && posts.length" class="posts__grid">
+          <article v-for="post in posts" :key="post._id" class="posts__item post-card">
+            <NuxtLink :to="`/${post.slug.current}`" class="post-card__link">
+              <h2 class="post-card__title">{{ post.title }}</h2>
+              <p class="post-card__date">{{ new Date(post.publishedAt).toLocaleDateString() }}</p>
+              <div v-if="post.categories?.length" class="post-card__categories">
+                <span v-for="category in post.categories" :key="category.slug.current" class="post-card__category">
+                  {{ category.title }}
                 </span>
               </div>
-              <img v-if="post.image" :src="urlFor(post.image)?.width(200).height(200).url()" alt="Post Image"
-                class="post-image" />
+              <img v-if="post.image" :src="urlFor(post.image)?.width(200).height(200).url()" 
+                   alt="Post Image" class="post-card__image" />
             </NuxtLink>
-          </div>
+          </article>
         </div>
-        <div v-else class="no-posts">
+        <div v-else class="posts__empty">
           <p>No posts found</p>
         </div>
       </section>
 
-      <section class="pagination">
-        <button v-for="i in totalPages" :key="i" :class="{ active: page === i }" @click="onPageClick(i)">
+      <nav class="posts-page__pagination pagination">
+        <button v-for="i in totalPages" :key="i" 
+                :class="['pagination__button', { 'pagination__button--active': page === i }]"
+                @click="onPageClick(i)">
           {{ i }}
         </button>
-      </section>
+      </nav>
     </main>
   </div>
 </template>
 
 <style lang="scss" scoped>
-/* Mixin for responsive design */
-@mixin respond-to($breakpoint) {
-  @if $breakpoint =='small' {
-    @media (max-width: 600px) {
-      @content;
-    }
-  }
+.posts-page {
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
 
-  @else if $breakpoint =='medium' {
-    @media (min-width: 601px) and (max-width: 1024px) {
-      @content;
-    }
-  }
-
-  @else if $breakpoint =='large' {
-    @media (min-width: 1025px) {
-      @content;
-    }
-  }
-}
-
-/* Global Styles */
-.container {
-  font-family: $primaryFont;
-  padding: 20px;
-  background-color: $skyLight;
-  color: $darkDark;
-
-  main {
+  &__main {
     max-width: 1200px;
     margin: 0 auto;
   }
 }
 
-/* Categories Section */
 .categories {
-  margin-bottom: 40px;
+  margin-bottom: 3rem;
 
-  h1 {
-    font-size: 2rem;
-    color: $primaryDark;
-    margin-bottom: 20px;
+  &__title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
     text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #2c3e50;
   }
 
-  .categories-list {
+  &__list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-
-    button {
-      background-color: $primaryColor;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: $primaryDark;
-      }
-
-      &.active {
-        background-color: $darkDark;
-      }
-    }
-  }
-}
-
-/* Posts Section */
-.posts {
-  margin-bottom: 40px;
-
-  h1 {
-    font-size: 2rem;
-    color: $primaryDark;
-    margin-bottom: 20px;
-    text-align: center;
+    gap: 1rem;
   }
 
-  .posts-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Default for large screens */
-    gap: 20px;
-
-    .post-item {
-      background-color: #fff;
-      border: 1px solid $darkLight;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: box-shadow 0.3s;
-
-      &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .post-link {
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-
-        .post-title {
-          font-size: 1.5rem;
-          font-weight: 600;
-          margin: 15px;
-          color: $primaryDark;
-        }
-
-        .post-date {
-          font-size: 0.9rem;
-          color: $darkLight;
-          margin: 0 15px 15px 15px;
-        }
-
-        .post-categories {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px;
-          margin: 0 15px 15px 15px;
-
-          .post-category {
-            background-color: $skyLight;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            color: $darkDark;
-
-            p {
-              margin: 0;
-            }
-          }
-        }
-
-        .post-image {
-          width: 100%;
-          /* Full width of the card */
-          height: 150px;
-          /* Reduced height for better proportions */
-          object-fit: cover;
-        }
-      }
-    }
-  }
-
-  .no-posts {
-    text-align: center;
-    font-size: 1.2rem;
-    color: $darkLight;
-  }
-}
-
-/* Pagination Section */
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-
-  button {
-    background-color: $skyLight;
-    color: $darkDark;
-    border: 1px solid $darkLight;
-    padding: 8px 16px;
-    border-radius: 5px;
+  &__button {
+    padding: 0.8rem 1.5rem;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
 
     &:hover {
-      background-color: $primaryColor;
+      background: #3498db;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    &--active {
+      background: #3498db;
+      color: #fff;
+      border-color: #3498db;
+    }
+  }
+}
+
+.posts {
+  &__title {
+    @extend .categories__title;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 2rem;
+    padding: 1rem;
+    
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+    font-size: 1.2rem;
+    padding: 2rem;
+  }
+}
+
+.post-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  &__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 1.5rem;
+  }
+
+  &__title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+
+  &__date {
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  &__categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  &__category {
+    background: #f8f9fa;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  &__image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+.pagination {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+
+  &__button {
+    padding: 0.8rem 1.2rem;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: #3498db;
       color: #fff;
     }
 
-    &.active {
-      background-color: $primaryDark;
+    &--active {
+      background: #3498db;
       color: #fff;
-      border-color: $primaryDark;
+      border-color: #3498db;
     }
-  }
-}
-
-/* Responsive Styles */
-@include respond-to('small') {
-  .posts-list {
-    grid-template-columns: 1fr;
-    /* Single column for mobile */
-  }
-}
-
-@include respond-to('medium') {
-  .posts-list {
-    grid-template-columns: repeat(2, 1fr);
-    /* Two columns for tablets */
-  }
-}
-
-@include respond-to('large') {
-  .posts-list {
-    grid-template-columns: repeat(3, 1fr);
-    /* Three columns for desktop */
   }
 }
 </style>
