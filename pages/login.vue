@@ -2,8 +2,8 @@
 </script>
 <template>
   <div>
-    <h1>Page d'inscription</h1>
-    <RegisterForm />
+    <h1>Page de connexion</h1>
+    <LoginForm />
   </div>
 </template>
 <style lang="scss"></style>

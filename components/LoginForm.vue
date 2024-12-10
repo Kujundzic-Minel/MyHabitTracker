@@ -10,20 +10,30 @@ const onSubmit = async (event: Event) => {
   console.log('Username:', username.value);
   console.log('Password:', password.value);
 
-  const responseRegister = await fetch('http://localhost:4000/auth/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
-  })
-  const data = await responseRegister.json();
-  console.log(data);
-};
+  try {
+    const responseLogin = await fetch('http://localhost:4000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value
+      })
+    });
 
+    const data = await responseLogin.json();
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      console.log('Login successful');
+    } else {
+      console.error('Login failed');
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+  }
+  
+};
 </script>
 
 <template>
