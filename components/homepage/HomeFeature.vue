@@ -9,7 +9,7 @@ defineProps<{
   features: Feature[];
 }>();
 </script>
-
+ 
 <template>
   <section v-if="features && features.length" class="features">
     <h2 class="features__title">Features</h2>

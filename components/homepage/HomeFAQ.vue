@@ -7,7 +7,7 @@ interface FAQItem {
 defineProps<{
   faq: FAQItem[];
 }>();
-</script>
+</script> 
 
 <template>
   <section v-if="faq && faq.length" class="faq">
