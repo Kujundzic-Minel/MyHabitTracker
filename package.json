@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^0.7.2",
+    "@vuepic/vue-datepicker": "^10.0.0",
     "eslint": "^9.16.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
