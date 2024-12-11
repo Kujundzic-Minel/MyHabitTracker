@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 type Habit = {
   id: number,
   user_id: number,
@@ -76,41 +79,43 @@ function toggleShow() {
   show.value = !show.value;
 }
 
-// Remplacer la ligne "const check = ref(false)" par:
+// Checkbox progress-bar
 const checkboxStates = ref<{ [key: number]: boolean }>({})
+const date = ref<string | null>(new Date().toISOString().split('T')[0]);
 
-// Initialiser les états des checkboxes quand les données sont chargées
-watch(() => dashboardData.value, (newData) => {
-  if (newData) {
-    // Initialiser les états pour les habitudes globales
-    newData.globalHabits.forEach(habit => {
-      checkboxStates.value[habit.id] = habit.completedToday || false;
-    });
-  }
-}, { immediate: true })
+const toggleCheckbox = (habitId: number) => {
+  checkboxStates.value[habitId] = !checkboxStates.value[habitId]
+}
 
-const toggleCheckbox = async (habitId: number) => {
+async function addCheckboxValue(habitId: number) {
   try {
-    const newState = !checkboxStates.value[habitId];
-    checkboxStates.value[habitId] = newState;
+    const response = await fetch(`http://localhost:4000/tracking/${habitId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
+      },
+      body: JSON.stringify({
+        completed: checkboxStates.value[habitId],
+        date: new Date().toISOString().split('T')[0]
+      })
+    })
 
-    // Ici, vous pouvez ajouter un appel API pour persister l'état
-    // const response = await fetch(`http://localhost:4000/habits/${habitId}/complete`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`,
-    //   },
-    //   body: JSON.stringify({ completed: newState }),
-    // });
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
 
-    // if (!response.ok) {
-    //   throw new Error('Failed to update habit completion status');
-    // }
+    await fetchDashboardData() // Rafraîchir les données pour mettre à jour le success_rate
+    console.log('Tracking updated successfully')
   } catch (error) {
-    console.error('Error toggling habit completion:', error);
-    // Restaurer l'état précédent en cas d'erreur
-    checkboxStates.value[habitId] = !checkboxStates.value[habitId];
+    console.error('Error updating tracking:', error)
+  }
+}
+
+// Ajout d'une fonction pour gérer le clic du bouton
+const handleSubmit = (habitId: number) => {
+  if (checkboxStates.value[habitId] !== undefined) {
+    addCheckboxValue(habitId)
   }
 }
 
@@ -130,8 +135,9 @@ const toggleCheckbox = async (habitId: number) => {
             <div class="habits__progress">
               <ProgressBarHabit :progress-habit="habit.success_rate" />
               <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
-              {{ dashboardData }}
-              <p>{{ checkboxStates[habit.id] }}</p>
+              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                class="habit-card__date-picker" />
+              <button type="button" @click="handleSubmit(habit.id)">Valider</button>
             </div>
           </li>
         </ul>
