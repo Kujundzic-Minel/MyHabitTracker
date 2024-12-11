@@ -1,5 +1,4 @@
 @use '/assets/scss/foundations/functions' as *;
 @use '/assets/scss/foundations/normalize' as *;
-
-@import './foundations/variables';
-@import './foundations/mixins';
+@use './foundations/variables' as *;
+@use './foundations/mixins' as *;

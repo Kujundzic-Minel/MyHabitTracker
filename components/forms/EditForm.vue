@@ -14,14 +14,14 @@ const onSubmit = async (event: Event) => {
   try {
     const response = await fetch(`http://localhost:4000/habits/${props.habitid}`, {
       method: 'PUT',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
       },
       body: JSON.stringify({
         title: nameEdit.value,
         description: descriptionEdit.value
-      }) 
+      })
     })
 
     if (!response.ok) {
@@ -47,23 +47,13 @@ const onSubmit = async (event: Event) => {
     <form @submit="onSubmit" class="edit-form__form">
       <div class="edit-form__group">
         <label class="edit-form__label" for="name">Nom de l'habitude</label>
-        <textarea 
-          id="name" 
-          v-model="nameEdit" 
-          class="edit-form__textarea"
-          placeholder="Entrez le nouveau nom de l'habitude" 
-          required 
-        />
+        <textarea id="name" v-model="nameEdit" class="edit-form__textarea"
+          placeholder="Entrez le nouveau nom de l'habitude" required />
       </div>
       <div class="edit-form__group">
         <label class="edit-form__label" for="description">Description</label>
-        <textarea 
-          id="description" 
-          v-model="descriptionEdit" 
-          class="edit-form__textarea"
-          placeholder="Décrivez la nouvelle habitude" 
-          required 
-        />
+        <textarea id="description" v-model="descriptionEdit" class="edit-form__textarea"
+          placeholder="Décrivez la nouvelle habitude" required />
       </div>
       <button type="submit" class="edit-form__submit">Modifier l'habitude</button>
     </form>
@@ -98,7 +88,8 @@ const onSubmit = async (event: Event) => {
     color: $textPrimary;
   }
 
-  &__input, &__textarea {
+  &__input,
+  &__textarea {
     padding: 0.75rem;
     border: 1px solid $borderColor;
     border-radius: 8px;
