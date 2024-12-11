@@ -93,7 +93,7 @@ const toggleCheckbox = async (habitId: number) => {
   try {
     const newState = !checkboxStates.value[habitId];
     checkboxStates.value[habitId] = newState;
-    
+
     // Ici, vous pouvez ajouter un appel API pour persister l'état
     // const response = await fetch(`http://localhost:4000/habits/${habitId}/complete`, {
     //   method: 'POST',
@@ -103,7 +103,7 @@ const toggleCheckbox = async (habitId: number) => {
     //   },
     //   body: JSON.stringify({ completed: newState }),
     // });
-    
+
     // if (!response.ok) {
     //   throw new Error('Failed to update habit completion status');
     // }
