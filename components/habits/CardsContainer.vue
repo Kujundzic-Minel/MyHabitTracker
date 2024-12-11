@@ -75,6 +75,45 @@ const show = ref(false)
 function toggleShow() {
   show.value = !show.value;
 }
+
+// Remplacer la ligne "const check = ref(false)" par:
+const checkboxStates = ref<{ [key: number]: boolean }>({})
+
+// Initialiser les états des checkboxes quand les données sont chargées
+watch(() => dashboardData.value, (newData) => {
+  if (newData) {
+    // Initialiser les états pour les habitudes globales
+    newData.globalHabits.forEach(habit => {
+      checkboxStates.value[habit.id] = habit.completedToday || false;
+    });
+  }
+}, { immediate: true })
+
+const toggleCheckbox = async (habitId: number) => {
+  try {
+    const newState = !checkboxStates.value[habitId];
+    checkboxStates.value[habitId] = newState;
+    
+    // Ici, vous pouvez ajouter un appel API pour persister l'état
+    // const response = await fetch(`http://localhost:4000/habits/${habitId}/complete`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`,
+    //   },
+    //   body: JSON.stringify({ completed: newState }),
+    // });
+    
+    // if (!response.ok) {
+    //   throw new Error('Failed to update habit completion status');
+    // }
+  } catch (error) {
+    console.error('Error toggling habit completion:', error);
+    // Restaurer l'état précédent en cas d'erreur
+    checkboxStates.value[habitId] = !checkboxStates.value[habitId];
+  }
+}
+
 </script>
 
 <template>
@@ -90,6 +129,9 @@ function toggleShow() {
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__progress">
               <ProgressBarHabit :progress-habit="habit.success_rate" />
+              <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
+              {{ dashboardData }}
+              <p>{{ checkboxStates[habit.id] }}</p>
             </div>
           </li>
         </ul>
