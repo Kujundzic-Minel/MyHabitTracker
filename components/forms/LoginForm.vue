@@ -8,7 +8,7 @@ const onSubmit = async (event: Event) => {
   console.log('Form has submitted');
   console.log('Username:', username.value);
   console.log('Password:', password.value);
- 
+
   try {
     const responseLogin = await fetch('http://localhost:4000/auth/login', {
       method: 'POST',
@@ -41,11 +41,13 @@ const onSubmit = async (event: Event) => {
     <h2 class="login-form__title">Connexion</h2>
     <div class="login-form__group">
       <label for="username" class="login-form__label">Username</label>
-      <input id="username" v-model="username" type="username" placeholder="Entrez votre username" class="login-form__input" required />
+      <input id="username" v-model="username" type="username" placeholder="Entrez votre username"
+        class="login-form__input" required />
     </div>
     <div class="login-form__group">
       <label for="password" class="login-form__label">Mot de passe</label>
-      <input id="password" v-model="password" type="password" placeholder="Entrez votre mot de passe" class="login-form__input" required />
+      <input id="password" v-model="password" type="password" placeholder="Entrez votre mot de passe"
+        class="login-form__input" required />
     </div>
     <button type="submit" class="login-form__submit">Se connecter</button>
   </form>
@@ -56,7 +58,16 @@ const onSubmit = async (event: Event) => {
 
 .login-form {
   @include form-container;
-  
+
+  &__title {
+    font-family: $font-family-primary;
+    font-weight: $font-weight-semibold;
+    font-size: 1.5rem;
+    color: $textPrimary;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
   &__group {
     display: flex;
     flex-direction: column;
