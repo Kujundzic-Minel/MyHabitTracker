@@ -4,6 +4,14 @@ $primaryDark: #2879af;
 $skyLight: #e3e5e5;
 $darkLight: #979c9e;
 $darkDark: #303437;
+$color-primary: #4A90E2;
+$successColor: #28a745; 
+$errorColor: #dc3545; 
+$color-background: #ffffff;
+$color-text-primary: #2c3e50;
+$color-text-secondary: #6c757d;
+$color-border: #e1e4e8;
+$color-shadow: rgba(0, 0, 0, 0.1);
 
 // UI Colors
 $textPrimary: $darkDark;
@@ -22,3 +30,26 @@ $font-weight-bold: 700;
 
 // Import Poppins font 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+$spacing-unit: 8px;
+$border-radius: 4px;
+$transition-duration: 0.2s;
+
+$color-primary: $primaryColor;
+$color-success: $successColor;
+$color-error: $errorColor;
+$color-background: $backgroundColor;
+$color-text-primary: $textPrimary;
+$color-text-secondary: $textSecondary;
+$color-border: $borderColor;
+$color-shadow: $shadowColor;
+
+$breakpoint-mobile: 768px;
+
+// Sizes
+$spacing-unit: 8px;
+$border-radius: 4px;
+$transition-duration: 0.2s;
+
+// Breakpoints
+$breakpoint-mobile: 768px;
