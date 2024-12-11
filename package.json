@@ -9,11 +9,15 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "format": "prettier --write src/"
   },
   "dependencies": {
     "@nuxt/eslint": "^0.7.2",
-    "@vuepic/vue-datepicker": "^10.0.0",
+    "@nuxtjs/sanity": "^1.13.0",
+    "@sanity/image-url": "^1.1.0",
     "eslint": "^9.16.0",
     "nuxt": "^3.14.1592",
     "vue": "latest",
