@@ -81,7 +81,7 @@ function toggleShow() {
 
 // Checkbox progress-bar
 const checkboxStates = ref<{ [key: number]: boolean }>({})
-const date = ref<string | null>(null)
+const date = ref<string | null>(new Date().toISOString().split('T')[0]);
 
 const toggleCheckbox = (habitId: number) => {
   checkboxStates.value[habitId] = !checkboxStates.value[habitId]
