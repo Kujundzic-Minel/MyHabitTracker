@@ -6,7 +6,6 @@ import CardsContainer from '~/components/habits/CardsContainer.vue';
 
 <template>
   <div>
-    <h1>Dashboard</h1>
     <CardsContainer />
   </div>
 </template>

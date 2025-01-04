@@ -14,11 +14,13 @@ defineProps<{
   <section v-if="features && features.length" class="features">
     <h2 class="features__title">Features</h2>
     <div class="features__grid">
-      <div v-for="feature in features" 
+      <div
+v-for="feature in features" 
            :key="feature.title" 
            class="features__card">
         <div v-if="feature.icon" class="features__icon-wrapper">
-          <img :src="feature.icon.asset.url" 
+          <img
+:src="feature.icon.asset.url" 
                alt="Feature Icon" 
                class="features__icon" />
         </div>

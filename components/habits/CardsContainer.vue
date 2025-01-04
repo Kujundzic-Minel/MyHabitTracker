@@ -15,7 +15,8 @@ type Habit = {
   total_attempts: number,
   monthly_users: number,
   completedToday: boolean,
-  success_rate: number
+  success_rate: number,
+  completed_dates?: string[]; // Ajout des dates complétées
 }
 
 interface DashboardData {
@@ -42,6 +43,13 @@ const fetchDashboardData = async () => {
     }
 
     dashboardData.value = await response.json()
+
+    // Initialiser les checkboxes pour la date actuelle
+    if (date.value && dashboardData.value) {
+      [...dashboardData.value.globalHabits, ...dashboardData.value.personalHabits].forEach(habit => {
+        checkboxStates.value[habit.id] = isHabitCompletedForDate(habit, date.value as string);
+      });
+    }
     console.log('Dashboard data:', dashboardData.value)
   } catch (error) {
     console.error('Error fetching dashboard data:', error)
@@ -87,28 +95,35 @@ const toggleCheckbox = (habitId: number) => {
   checkboxStates.value[habitId] = !checkboxStates.value[habitId]
 }
 
+// Add new function to handle local storage
+const getLocalStorageKey = (habitId: number, date: string) => {
+  // Ensure we're using local timezone date
+  const localDate = new Date(date);
+  const formattedDate = localDate.toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
+  return `habit_${habitId}_${formattedDate}`;
+};
+
+// Ajouter l'émetteur d'événements
+const emit = defineEmits(['habit-updated']);
+
+// Modify addCheckboxValue to use localStorage instead of API
 async function addCheckboxValue(habitId: number) {
   try {
-    const response = await fetch(`http://localhost:4000/tracking/${habitId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
-      },
-      body: JSON.stringify({
-        completed: checkboxStates.value[habitId],
-        date: new Date().toISOString().split('T')[0]
-      })
-    })
+    const currentDate = date.value as string;
+    const storageKey = getLocalStorageKey(habitId, currentDate);
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
+    if (checkboxStates.value[habitId]) {
+      localStorage.setItem(storageKey, 'completed');
+      console.log(`Marked as completed: ${storageKey}`); // Debug log
+    } else {
+      localStorage.removeItem(storageKey);
+      console.log(`Marked as uncompleted: ${storageKey}`); // Debug log
     }
 
-    await fetchDashboardData() // Rafraîchir les données pour mettre à jour le success_rate
-    console.log('Tracking updated successfully')
+    emit('habit-updated');
+    await fetchDashboardData();
   } catch (error) {
-    console.error('Error updating tracking:', error)
+    console.error('Error updating tracking:', error);
   }
 }
 
@@ -119,38 +134,71 @@ const handleSubmit = (habitId: number) => {
   }
 }
 
+// Fonction pour vérifier si une habitude est complétée pour une date donnée
+const isHabitCompletedForDate = (habit: Habit, date: string) => {
+  const storageKey = getLocalStorageKey(habit.id, date);
+  return localStorage.getItem(storageKey) === 'completed';
+}
+
+// Mettre à jour les checkboxes quand la date change
+watch(date, (newDate) => {
+  if (!dashboardData.value) return;
+
+  [...dashboardData.value.globalHabits, ...dashboardData.value.personalHabits].forEach(habit => {
+    checkboxStates.value[habit.id] = isHabitCompletedForDate(habit, newDate as string);
+  });
+});
+
+// Ajout des props pour le filtrage
+defineProps<{
+  filterId?: number;
+  isDetailView?: boolean;
+}>();
+
 </script>
 
 <template>
   <div class="habits">
-    <h1 class="habits__title">Liste des habitudes</h1>
+    <h1 class="habits__title">
+      {{ isDetailView ? 'Détail de l\'habitude' : 'Liste des habitudes' }}
+    </h1>
     <p v-if="!dashboardData" class="habits__loading">Chargement des données...</p>
 
     <div v-else class="habits__container">
       <div v-if="Array.isArray(dashboardData.globalHabits)" class="habits__section">
-        <h2 class="habits__section-title">Habitudes Globales</h2>
+        <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Globales</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.globalHabits" :key="habit.id" class="habits__item">
+          <li
+v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+            class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
-            <div class="habits__progress">
-              <ProgressBarHabit :progress-habit="habit.success_rate" />
+            <div class="habits__tracking">
               <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
-              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+              <VueDatePicker
+v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
                 class="habit-card__date-picker" />
-              <button type="button" @click="handleSubmit(habit.id)">Valider</button>
+              <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
             </div>
           </li>
         </ul>
       </div>
 
       <div v-if="Array.isArray(dashboardData.personalHabits)" class="habits__section">
-        <h2 class="habits__section-title">Habitudes Personnelles</h2>
+        <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Personnelles</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.personalHabits" :key="habit.id" class="habits__item">
+          <li
+v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+            class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__actions">
-              <div class="habits__progress">
-                <ProgressBarHabit :progress-habit="habit.success_rate" />
+              <div class="habits__tracking">
+                <CustomCheckbox
+:id="habit.id" :ischecked="checkboxStates[habit.id]"
+                  @toggle="toggleCheckbox(habit.id)" />
+                <VueDatePicker
+v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                  class="habit-card__date-picker" />
+                <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
               </div>
               <div class="habits__buttons">
                 <DeleteButton :id="habit.id" @delete="deleteHabit" />
@@ -224,10 +272,6 @@ const handleSubmit = (habitId: number) => {
     margin-top: 1rem;
   }
 
-  &__progress {
-    margin-bottom: 1rem;
-  }
-
   &__buttons {
     display: flex;
     gap: 0.5rem;
@@ -239,6 +283,27 @@ const handleSubmit = (habitId: number) => {
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid $borderColor;
+  }
+
+  &__tracking {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  &__submit-btn {
+    padding: 0.5rem 1rem;
+    background-color: $primaryColor;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primaryColor, 10%);
+    }
   }
 
   @media (max-width: 768px) {
@@ -260,5 +325,9 @@ const handleSubmit = (habitId: number) => {
       padding: 1rem;
     }
   }
+}
+
+.habit-card__date-picker {
+  width: 100%;
 }
 </style>

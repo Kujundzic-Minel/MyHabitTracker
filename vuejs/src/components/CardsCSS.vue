@@ -1,13 +1,16 @@
 <script setup lang="ts">
 defineProps({
-  progressHabit: Number,
+  progressHabit: {
+    type: Number,
+    default: 0
+  },
 })
 </script>
 <template>
   <div>
     <h2>Progrès :</h2>
     <div class="progressBar__BG">
-      <div class="progressBar__Fill" :style="{'--WidthProgress': `${progressHabit}%`}"/>
+      <div class="progressBar__Fill" :style="{ '--WidthProgress': `${progressHabit}%` }" />
     </div>
   </div>
 </template>
@@ -26,12 +29,15 @@ defineProps({
   height: 100%;
   background-color: blue;
   transition: width 0.3s ease;
-  animation: forwards ProgressBarAnimation 1s cubic-bezier(.99,0,.27,1);
+  animation: forwards ProgressBarAnimation 1s cubic-bezier(.99, 0, .27, 1);
 }
-@keyframes ProgressBarAnimation{
-  from{
+
+@keyframes ProgressBarAnimation {
+  from {
     width: 0;
-  }  to {
+  }
+
+  to {
     width: var(--WidthProgress);
   }
 }

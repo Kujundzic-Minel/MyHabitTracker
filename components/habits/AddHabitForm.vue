@@ -40,15 +40,17 @@ const onSubmit = async (event: Event) => {
 <template>
   <div class="habit-form">
     <h2 class="habit-form__title">Ajouter une Nouvelle Habitude</h2>
-    <form @submit="onSubmit" class="habit-form__form">
+    <form class="habit-form__form" @submit="onSubmit">
       <div class="habit-form__group">
         <label class="habit-form__label" for="name">Nom de l'habitude</label>
-        <textarea id="name" v-model="name" class="habit-form__textarea" placeholder="Entrez le nom de l'habitude"
+        <textarea
+id="name" v-model="name" class="habit-form__textarea" placeholder="Entrez le nom de l'habitude"
           required />
       </div>
       <div class="habit-form__group">
         <label class="habit-form__label" for="description">Description</label>
-        <textarea id="description" v-model="description" class="habit-form__textarea" placeholder="Décrivez l'habitude"
+        <textarea
+id="description" v-model="description" class="habit-form__textarea" placeholder="Décrivez l'habitude"
           required />
       </div>
       <button type="submit" class="habit-form__submit">Ajouter l'Habitude</button>

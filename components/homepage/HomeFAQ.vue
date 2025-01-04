@@ -13,7 +13,8 @@ defineProps<{
   <section v-if="faq && faq.length" class="faq">
     <h2 class="faq__title">FAQ</h2>
     <div class="faq__list">
-      <div v-for="item in faq" 
+      <div
+v-for="item in faq" 
            :key="item.question" 
            class="faq__item">
         <h3 class="faq__question">{{ item.question }}</h3>
