@@ -9,6 +9,6 @@ import Header from './components/Header.vue';
 </template>
 <style>
 .Main {
-  padding-top: 2rem;
+  padding-top: 4rem;
 }
 </style>

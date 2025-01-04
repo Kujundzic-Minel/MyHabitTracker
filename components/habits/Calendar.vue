@@ -6,7 +6,6 @@ const props = defineProps<{
 const currentMonth = ref(new Date());
 const days = ref<{ day: number; completed: boolean }[]>([]);
 
-// Fonction simplifiée pour vérifier le statut
 const refreshDays = () => {
     const daysArray = [];
     const year = currentMonth.value.getFullYear();
