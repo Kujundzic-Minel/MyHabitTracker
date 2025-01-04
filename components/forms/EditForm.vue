@@ -47,12 +47,14 @@ const onSubmit = async (event: Event) => {
     <form class="edit-form__form" @submit="onSubmit">
       <div class="edit-form__group">
         <label class="edit-form__label" for="name">Nom de l'habitude</label>
-        <textarea id="name" v-model="nameEdit" class="edit-form__textarea"
+        <textarea
+id="name" v-model="nameEdit" class="edit-form__textarea"
           placeholder="Entrez le nouveau nom de l'habitude" required />
       </div>
       <div class="edit-form__group">
         <label class="edit-form__label" for="description">Description</label>
-        <textarea id="description" v-model="descriptionEdit" class="edit-form__textarea"
+        <textarea
+id="description" v-model="descriptionEdit" class="edit-form__textarea"
           placeholder="Décrivez la nouvelle habitude" required />
       </div>
       <button type="submit" class="edit-form__submit">Modifier l'habitude</button>

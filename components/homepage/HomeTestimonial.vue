@@ -15,11 +15,13 @@ defineProps<{
   <section v-if="testimonials && testimonials.length" class="testimonials">
     <h2 class="testimonials__title">Témoignages</h2>
     <div class="testimonials__grid">
-      <div v-for="testimonial in testimonials" 
+      <div
+v-for="testimonial in testimonials" 
            :key="testimonial.name" 
            class="testimonials__card">
         <div v-if="testimonial.photo" class="testimonials__image-wrapper">
-          <img :src="testimonial.photo.asset.url" 
+          <img
+:src="testimonial.photo.asset.url" 
                :alt="testimonial.name" 
                class="testimonials__image" />
         </div>

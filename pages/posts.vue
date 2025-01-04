@@ -81,7 +81,8 @@ const totalPages = computed(() => {
                   {{ category.title }}
                 </span>
               </div>
-              <img v-if="post.image" :src="urlFor(post.image)?.width(200).height(200).url()" 
+              <img
+v-if="post.image" :src="urlFor(post.image)?.width(200).height(200).url()" 
                    alt="Post Image" class="post-card__image" />
             </NuxtLink>
           </article>
@@ -92,7 +93,8 @@ const totalPages = computed(() => {
       </section>
 
       <nav class="posts-page__pagination pagination">
-        <button v-for="i in totalPages" :key="i" 
+        <button
+v-for="i in totalPages" :key="i" 
                 :class="['pagination__button', { 'pagination__button--active': page === i }]"
                 @click="onPageClick(i)">
           {{ i }}

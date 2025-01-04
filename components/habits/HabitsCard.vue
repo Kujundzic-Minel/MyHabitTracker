@@ -2,13 +2,13 @@
 defineProps({
   name: {
     type: String,
-    default: 'Nom par défaut',
+    default: 'Nom par défaut'
   },
   description: {
     type: String,
-    default: 'Description par défaut', 
+    default: 'Description par défaut'
   },
-}) 
+})
 </script>
 
 <template>
@@ -28,7 +28,7 @@ defineProps({
   padding: 1.5rem;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }

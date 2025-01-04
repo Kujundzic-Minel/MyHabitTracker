@@ -58,7 +58,8 @@ defineExpose({ refreshDays, days });
         <div class="habit-calendar__grid">
             <div v-for="day in days" :key="day.day" class="habit-calendar__day">
                 <span class="habit-calendar__date">{{ day.day }}</span>
-                <div class="habit-calendar__indicator"
+                <div
+class="habit-calendar__indicator"
                     :class="{ 'habit-calendar__indicator--completed': day.completed }"></div>
             </div>
         </div>

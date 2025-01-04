@@ -150,7 +150,7 @@ watch(date, (newDate) => {
 });
 
 // Ajout des props pour le filtrage
-const props = defineProps<{
+defineProps<{
   filterId?: number;
   isDetailView?: boolean;
 }>();
@@ -168,12 +168,14 @@ const props = defineProps<{
       <div v-if="Array.isArray(dashboardData.globalHabits)" class="habits__section">
         <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Globales</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+          <li
+v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__tracking">
               <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
-              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+              <VueDatePicker
+v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
                 class="habit-card__date-picker" />
               <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
             </div>
@@ -184,14 +186,17 @@ const props = defineProps<{
       <div v-if="Array.isArray(dashboardData.personalHabits)" class="habits__section">
         <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Personnelles</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+          <li
+v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__actions">
               <div class="habits__tracking">
-                <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
+                <CustomCheckbox
+:id="habit.id" :ischecked="checkboxStates[habit.id]"
                   @toggle="toggleCheckbox(habit.id)" />
-                <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                <VueDatePicker
+v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
                   class="habit-card__date-picker" />
                 <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
               </div>
