@@ -4,7 +4,7 @@ const props = defineProps<{
 }>();
 
 const currentMonth = ref(new Date());
-const days = ref([]);
+const days = ref<{ day: number; completed: boolean }[]>([]);
 
 // Fonction simplifiée pour vérifier le statut
 const refreshDays = () => {
@@ -43,51 +43,72 @@ onMounted(() => refreshDays());
 watch(() => props.habitId, refreshDays);
 watch(() => currentMonth.value, refreshDays);
 
-defineExpose({ refreshDays });
+// Expose days array and refreshDays function
+defineExpose({ refreshDays, days });
 </script>
 
 <template>
-    <div class="calendar">
-        <div class="calendar__header">
-            <button @click="previousMonth" class="calendar__nav-btn">&lt;</button>
-            <h3 class="calendar__title">
+    <div class="habit-calendar">
+        <div class="habit-calendar__header">
+            <button class="habit-calendar__nav" @click="previousMonth">&lt;</button>
+            <h3 class="habit-calendar__title">
                 {{ currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) }}
             </h3>
-            <button @click="nextMonth" class="calendar__nav-btn">&gt;</button>
+            <button class="habit-calendar__nav" @click="nextMonth">&gt;</button>
         </div>
-        <div class="calendar__grid">
-            <div v-for="day in days" :key="day.day" class="calendar__day">
-                <span class="calendar__date">{{ day.day }}</span>
-                <div class="calendar__status" :class="{ 'calendar__status--completed': day.completed }"></div>
+        <div class="habit-calendar__grid">
+            <div v-for="day in days" :key="day.day" class="habit-calendar__day">
+                <span class="habit-calendar__date">{{ day.day }}</span>
+                <div class="habit-calendar__indicator"
+                    :class="{ 'habit-calendar__indicator--completed': day.completed }"></div>
             </div>
         </div>
-        <div class="calendar__legend">
-            <div class="calendar__legend-item">
-                <span class="calendar__legend-dot calendar__legend-dot--completed"></span>
-                <span class="calendar__legend-text">Habitude complétée</span>
+        <div class="habit-calendar__legend">
+            <div class="habit-calendar__legend-item">
+                <span class="habit-calendar__legend-dot habit-calendar__legend-dot--completed"></span>
+                <span class="habit-calendar__legend-text">Complété</span>
             </div>
-            <div class="calendar__legend-item">
-                <span class="calendar__legend-dot"></span>
-                <span class="calendar__legend-text">Habitude non complétée</span>
+            <div class="habit-calendar__legend-item">
+                <span class="habit-calendar__legend-dot"></span>
+                <span class="habit-calendar__legend-text">Non complété</span>
             </div>
         </div>
     </div>
 </template>
 
 <style lang="scss">
-.calendar {
+.habit-calendar {
     margin: 20px 0;
     padding: 15px;
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
     &__title {
         font-family: $font-family-primary;
         font-size: 1.2rem;
-        margin-bottom: 1rem;
         font-weight: $font-weight-semibold;
         color: $textPrimary;
+    }
+
+    &__nav {
+        padding: 0.5rem 1rem;
+        background-color: transparent;
+        border: 1px solid $borderColor;
+        border-radius: 4px;
+        cursor: pointer;
+        color: $textPrimary;
+
+        &:hover {
+            background-color: $backgroundColor;
+        }
     }
 
     &__grid {
@@ -109,7 +130,7 @@ defineExpose({ refreshDays });
         color: $textPrimary;
     }
 
-    &__status {
+    &__indicator {
         width: 8px;
         height: 8px;
         border-radius: 50%;
@@ -152,26 +173,6 @@ defineExpose({ refreshDays });
         font-family: $font-family-primary;
         font-size: 0.9rem;
         color: $textSecondary;
-    }
-
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-    }
-
-    &__nav-btn {
-        padding: 0.5rem 1rem;
-        background-color: transparent;
-        border: 1px solid $borderColor;
-        border-radius: 4px;
-        cursor: pointer;
-        color: $textPrimary;
-
-        &:hover {
-            background-color: $backgroundColor;
-        }
     }
 }
 </style>

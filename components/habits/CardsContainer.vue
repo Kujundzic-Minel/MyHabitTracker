@@ -171,15 +171,11 @@ const props = defineProps<{
           <li v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
-            <div class="habits__progress">
-              <ProgressBarHabit :progress-habit="habit.success_rate" />
-              <div class="habits__tracking">
-                <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
-                  @toggle="toggleCheckbox(habit.id)" />
-                <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
-                  class="habit-card__date-picker" />
-                <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
-              </div>
+            <div class="habits__tracking">
+              <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
+              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                class="habit-card__date-picker" />
+              <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
             </div>
           </li>
         </ul>
@@ -192,15 +188,12 @@ const props = defineProps<{
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__actions">
-              <div class="habits__progress">
-                <ProgressBarHabit :progress-habit="habit.success_rate" />
-                <div class="habits__tracking">
-                  <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
-                    @toggle="toggleCheckbox(habit.id)" />
-                  <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
-                    class="habit-card__date-picker" />
-                  <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
-                </div>
+              <div class="habits__tracking">
+                <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
+                  @toggle="toggleCheckbox(habit.id)" />
+                <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                  class="habit-card__date-picker" />
+                <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
               </div>
               <div class="habits__buttons">
                 <DeleteButton :id="habit.id" @delete="deleteHabit" />
@@ -272,10 +265,6 @@ const props = defineProps<{
 
   &__actions {
     margin-top: 1rem;
-  }
-
-  &__progress {
-    margin-bottom: 1rem;
   }
 
   &__buttons {
