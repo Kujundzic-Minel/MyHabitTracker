@@ -139,18 +139,27 @@ watch(date, (newDate) => {
   });
 });
 
+// Ajout des props pour le filtrage
+const props = defineProps<{
+  filterId?: number;
+  isDetailView?: boolean;
+}>();
+
 </script>
 
 <template>
   <div class="habits">
-    <h1 class="habits__title">Liste des habitudes</h1>
+    <h1 class="habits__title">
+      {{ isDetailView ? 'Détail de l\'habitude' : 'Liste des habitudes' }}
+    </h1>
     <p v-if="!dashboardData" class="habits__loading">Chargement des données...</p>
 
     <div v-else class="habits__container">
       <div v-if="Array.isArray(dashboardData.globalHabits)" class="habits__section">
-        <h2 class="habits__section-title">Habitudes Globales</h2>
+        <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Globales</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.globalHabits" :key="habit.id" class="habits__item">
+          <li v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+            class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__progress">
               <ProgressBarHabit :progress-habit="habit.success_rate" />
@@ -167,9 +176,10 @@ watch(date, (newDate) => {
       </div>
 
       <div v-if="Array.isArray(dashboardData.personalHabits)" class="habits__section">
-        <h2 class="habits__section-title">Habitudes Personnelles</h2>
+        <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Personnelles</h2>
         <ul class="habits__list">
-          <li v-for="habit in dashboardData.personalHabits" :key="habit.id" class="habits__item">
+          <li v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+            class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__actions">
               <div class="habits__progress">
