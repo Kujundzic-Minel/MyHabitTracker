@@ -6,6 +6,7 @@ defineProps({
   },
 }) 
 </script>
+
 <template>
   <div class="progress-bar">
     <div class="progress-bar__header">
