@@ -88,10 +88,8 @@ const { data: homepage } = await useSanityQuery<Homepage>(groq`
 
 <template>
   <div v-if="homepage">
-    <!-- Section Hero -->
     <Hero v-if="homepage.hero" :hero="homepage.hero" />
 
-    <!-- Autres sections -->
     <HomeSubscription v-if="homepage.subscriptions" :subscriptions="homepage.subscriptions" />
     <HomeFeature v-if="homepage.features" :features="homepage.features" />
     <HomeTestimonial v-if="homepage.testimonials" :testimonials="homepage.testimonials" />

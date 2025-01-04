@@ -96,7 +96,15 @@ const toggleCheckbox = (habitId: number) => {
 }
 
 // Add new function to handle local storage
-const getLocalStorageKey = (habitId: number, date: string) => `habit_${habitId}_${date}`;
+const getLocalStorageKey = (habitId: number, date: string) => {
+  // Ensure we're using local timezone date
+  const localDate = new Date(date);
+  const formattedDate = localDate.toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
+  return `habit_${habitId}_${formattedDate}`;
+};
+
+// Ajouter l'émetteur d'événements
+const emit = defineEmits(['habit-updated']);
 
 // Modify addCheckboxValue to use localStorage instead of API
 async function addCheckboxValue(habitId: number) {
@@ -106,12 +114,14 @@ async function addCheckboxValue(habitId: number) {
 
     if (checkboxStates.value[habitId]) {
       localStorage.setItem(storageKey, 'completed');
+      console.log(`Marked as completed: ${storageKey}`); // Debug log
     } else {
       localStorage.removeItem(storageKey);
+      console.log(`Marked as uncompleted: ${storageKey}`); // Debug log
     }
 
-    await fetchDashboardData(); // Refresh data to update success_rate
-    console.log('Tracking updated in local storage');
+    emit('habit-updated');
+    await fetchDashboardData();
   } catch (error) {
     console.error('Error updating tracking:', error);
   }

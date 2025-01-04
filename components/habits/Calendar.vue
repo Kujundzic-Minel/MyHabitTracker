@@ -4,27 +4,57 @@ const props = defineProps<{
 }>();
 
 const currentMonth = ref(new Date());
-const daysInMonth = computed(() => {
-    const date = new Date(currentMonth.value);
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-});
+const days = ref([]);
 
-const days = computed(() => {
-    const days = [];
-    for (let i = 1; i <= daysInMonth.value; i++) {
-        const date = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth(), i);
-        const dateString = date.toISOString().split('T')[0];
-        const isCompleted = localStorage.getItem(`habit_${props.habitId}_${dateString}`) === 'completed';
-        days.push({ day: i, completed: isCompleted });
+// Fonction simplifiée pour vérifier le statut
+const refreshDays = () => {
+    const daysArray = [];
+    const year = currentMonth.value.getFullYear();
+    const month = currentMonth.value.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 1; i <= daysInMonth; i++) {
+        const date = new Date(year, month, i);
+        // Format the date in local timezone
+        const formattedDate = date.toLocaleDateString('fr-CA'); // Format YYYY-MM-DD
+        const isCompleted = localStorage.getItem(`habit_${props.habitId}_${formattedDate}`) === 'completed';
+        console.log(`Checking day ${i} (${formattedDate}): ${isCompleted}`); // Debug log amélioré
+        daysArray.push({ day: i, completed: isCompleted });
     }
-    return days;
-});
+    days.value = daysArray;
+};
+
+const previousMonth = () => {
+    const newMonth = new Date(currentMonth.value);
+    newMonth.setMonth(newMonth.getMonth() - 1);
+    currentMonth.value = newMonth;
+    refreshDays();
+};
+
+const nextMonth = () => {
+    const newMonth = new Date(currentMonth.value);
+    newMonth.setMonth(newMonth.getMonth() + 1);
+    currentMonth.value = newMonth;
+    refreshDays();
+};
+
+// Initialisation et watches
+onMounted(() => refreshDays());
+watch(() => props.habitId, refreshDays);
+watch(() => currentMonth.value, refreshDays);
+
+defineExpose({ refreshDays });
 </script>
 
 <template>
     <div class="calendar">
-        <h3 class="calendar__title">{{ currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) }}
-        </h3>
+        <div class="calendar__header">
+            <button @click="previousMonth" class="calendar__nav-btn">&lt;</button>
+            <h3 class="calendar__title">
+                {{ currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) }}
+            </h3>
+            <button @click="nextMonth" class="calendar__nav-btn">&gt;</button>
+        </div>
         <div class="calendar__grid">
             <div v-for="day in days" :key="day.day" class="calendar__day">
                 <span class="calendar__date">{{ day.day }}</span>
@@ -122,6 +152,26 @@ const days = computed(() => {
         font-family: $font-family-primary;
         font-size: 0.9rem;
         color: $textSecondary;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    &__nav-btn {
+        padding: 0.5rem 1rem;
+        background-color: transparent;
+        border: 1px solid $borderColor;
+        border-radius: 4px;
+        cursor: pointer;
+        color: $textPrimary;
+
+        &:hover {
+            background-color: $backgroundColor;
+        }
     }
 }
 </style>
