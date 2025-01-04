@@ -3,7 +3,12 @@ import Header from './components/Header.vue';
 </script>
 <template>
   <Header />
-  <div>
+  <div class="Main">
     <NuxtPage />
   </div>
 </template>
+<style>
+.Main {
+  padding-top: 2rem;
+}
+</style>
