@@ -15,7 +15,8 @@ type Habit = {
   total_attempts: number,
   monthly_users: number,
   completedToday: boolean,
-  success_rate: number
+  success_rate: number,
+  completed_dates?: string[]; // Ajout des dates complétées
 }
 
 interface DashboardData {
@@ -42,6 +43,13 @@ const fetchDashboardData = async () => {
     }
 
     dashboardData.value = await response.json()
+
+    // Initialiser les checkboxes pour la date actuelle
+    if (date.value && dashboardData.value) {
+      [...dashboardData.value.globalHabits, ...dashboardData.value.personalHabits].forEach(habit => {
+        checkboxStates.value[habit.id] = isHabitCompletedForDate(habit, date.value as string);
+      });
+    }
     console.log('Dashboard data:', dashboardData.value)
   } catch (error) {
     console.error('Error fetching dashboard data:', error)
@@ -87,28 +95,25 @@ const toggleCheckbox = (habitId: number) => {
   checkboxStates.value[habitId] = !checkboxStates.value[habitId]
 }
 
+// Add new function to handle local storage
+const getLocalStorageKey = (habitId: number, date: string) => `habit_${habitId}_${date}`;
+
+// Modify addCheckboxValue to use localStorage instead of API
 async function addCheckboxValue(habitId: number) {
   try {
-    const response = await fetch(`http://localhost:4000/tracking/${habitId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
-      },
-      body: JSON.stringify({
-        completed: checkboxStates.value[habitId],
-        date: new Date().toISOString().split('T')[0]
-      })
-    })
+    const currentDate = date.value as string;
+    const storageKey = getLocalStorageKey(habitId, currentDate);
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
+    if (checkboxStates.value[habitId]) {
+      localStorage.setItem(storageKey, 'completed');
+    } else {
+      localStorage.removeItem(storageKey);
     }
 
-    await fetchDashboardData() // Rafraîchir les données pour mettre à jour le success_rate
-    console.log('Tracking updated successfully')
+    await fetchDashboardData(); // Refresh data to update success_rate
+    console.log('Tracking updated in local storage');
   } catch (error) {
-    console.error('Error updating tracking:', error)
+    console.error('Error updating tracking:', error);
   }
 }
 
@@ -118,6 +123,21 @@ const handleSubmit = (habitId: number) => {
     addCheckboxValue(habitId)
   }
 }
+
+// Fonction pour vérifier si une habitude est complétée pour une date donnée
+const isHabitCompletedForDate = (habit: Habit, date: string) => {
+  const storageKey = getLocalStorageKey(habit.id, date);
+  return localStorage.getItem(storageKey) === 'completed';
+}
+
+// Mettre à jour les checkboxes quand la date change
+watch(date, (newDate) => {
+  if (!dashboardData.value) return;
+
+  [...dashboardData.value.globalHabits, ...dashboardData.value.personalHabits].forEach(habit => {
+    checkboxStates.value[habit.id] = isHabitCompletedForDate(habit, newDate as string);
+  });
+});
 
 </script>
 
@@ -134,10 +154,13 @@ const handleSubmit = (habitId: number) => {
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__progress">
               <ProgressBarHabit :progress-habit="habit.success_rate" />
-              <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
-              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
-                class="habit-card__date-picker" />
-              <button type="button" @click="handleSubmit(habit.id)">Valider</button>
+              <div class="habits__tracking">
+                <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
+                  @toggle="toggleCheckbox(habit.id)" />
+                <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                  class="habit-card__date-picker" />
+                <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
+              </div>
             </div>
           </li>
         </ul>
@@ -151,6 +174,13 @@ const handleSubmit = (habitId: number) => {
             <div class="habits__actions">
               <div class="habits__progress">
                 <ProgressBarHabit :progress-habit="habit.success_rate" />
+                <div class="habits__tracking">
+                  <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
+                    @toggle="toggleCheckbox(habit.id)" />
+                  <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                    class="habit-card__date-picker" />
+                  <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
+                </div>
               </div>
               <div class="habits__buttons">
                 <DeleteButton :id="habit.id" @delete="deleteHabit" />
@@ -241,6 +271,27 @@ const handleSubmit = (habitId: number) => {
     border-top: 1px solid $borderColor;
   }
 
+  &__tracking {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  &__submit-btn {
+    padding: 0.5rem 1rem;
+    background-color: $primaryColor;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primaryColor, 10%);
+    }
+  }
+
   @media (max-width: 768px) {
     padding: 1rem;
 
@@ -260,5 +311,9 @@ const handleSubmit = (habitId: number) => {
       padding: 1rem;
     }
   }
+}
+
+.habit-card__date-picker {
+  width: 100%;
 }
 </style>
