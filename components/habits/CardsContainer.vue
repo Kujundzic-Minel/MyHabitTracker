@@ -305,7 +305,7 @@ defineProps<{
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: darken($primaryColor, 10%);
+      background-color: $primaryDark;
     }
   }
 

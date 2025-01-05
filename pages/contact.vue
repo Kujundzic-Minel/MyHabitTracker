@@ -67,7 +67,7 @@
         transition: color 0.3s;
 
         &:hover {
-            color: darken($primaryColor, 10%);
+            color: $primaryDark;
         }
     }
 
