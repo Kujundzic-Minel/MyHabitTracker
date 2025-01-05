@@ -30,29 +30,37 @@ const dashboardData = ref<DashboardData | null>(null)
 
 const fetchDashboardData = async () => {
   try {
+    const token = useCookie('api_tracking_jwt').value || localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
     const response = await fetch('http://localhost:4000/dashboard', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${useCookie('api_tracking_jwt').value}`
+        'Authorization': `Bearer ${token}`
       }
-    })
+    });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok')
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    dashboardData.value = await response.json()
+    dashboardData.value = await response.json();
 
-    // Initialiser les checkboxes pour la date actuelle
     if (date.value && dashboardData.value) {
       [...dashboardData.value.globalHabits, ...dashboardData.value.personalHabits].forEach(habit => {
         checkboxStates.value[habit.id] = isHabitCompletedForDate(habit, date.value as string);
       });
     }
-    console.log('Dashboard data:', dashboardData.value)
   } catch (error) {
-    console.error('Error fetching dashboard data:', error)
+    console.error('Error fetching dashboard data:', error);
+    if (error.message.includes('No authentication token')) {
+      // Redirect to login if no token is found
+      useRouter().push('/login');
+    }
   }
 }
 
@@ -168,14 +176,12 @@ defineProps<{
       <div v-if="Array.isArray(dashboardData.globalHabits)" class="habits__section">
         <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Globales</h2>
         <ul class="habits__list">
-          <li
-v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+          <li v-for="habit in dashboardData.globalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__tracking">
               <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]" @toggle="toggleCheckbox(habit.id)" />
-              <VueDatePicker
-v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+              <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
                 class="habit-card__date-picker" />
               <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
             </div>
@@ -186,17 +192,14 @@ v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
       <div v-if="Array.isArray(dashboardData.personalHabits)" class="habits__section">
         <h2 v-if="!isDetailView" class="habits__section-title">Habitudes Personnelles</h2>
         <ul class="habits__list">
-          <li
-v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
+          <li v-for="habit in dashboardData.personalHabits.filter(h => !filterId || h.id === filterId)" :key="habit.id"
             class="habits__item">
             <HabitsCard :name="habit.title" :description="habit.description" />
             <div class="habits__actions">
               <div class="habits__tracking">
-                <CustomCheckbox
-:id="habit.id" :ischecked="checkboxStates[habit.id]"
+                <CustomCheckbox :id="habit.id" :ischecked="checkboxStates[habit.id]"
                   @toggle="toggleCheckbox(habit.id)" />
-                <VueDatePicker
-v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
+                <VueDatePicker v-model="date" :enable-time-picker="false" model-type="yyyy-MM-dd"
                   class="habit-card__date-picker" />
                 <button type="button" class="habits__submit-btn" @click="handleSubmit(habit.id)">Valider</button>
               </div>
