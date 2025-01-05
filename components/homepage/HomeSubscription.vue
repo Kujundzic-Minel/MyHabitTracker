@@ -13,18 +13,19 @@ defineProps<{
 </script>
 
 <template>
-  <section v-if="subscriptions && subscriptions.length" class="subscription-section">
-    <h2>Subscriptions</h2>
-    <div class="cards-container">
-      <div v-for="subscription in subscriptions" :key="subscription.title" class="subscription-card">
-        <h3>{{ subscription.title }}</h3>
-        <div class="price">{{ subscription.price }}</div>
-        <p class="description">{{ subscription.description }}</p>
-        <ul>
-          <li v-for="feature in subscription.features" :key="feature">{{ feature }}</li>
+  <section v-if="subscriptions && subscriptions.length" class="subscriptions">
+    <h2 class="subscriptions__title">Subscriptions</h2>
+    <div class="subscriptions__container">
+      <div v-for="subscription in subscriptions" :key="subscription.title" class="subscriptions__card">
+        <h3 class="subscriptions__card-title">{{ subscription.title }}</h3>
+        <div class="subscriptions__card-price">{{ subscription.price }}</div>
+        <p class="subscriptions__card-description">{{ subscription.description }}</p>
+        <ul class="subscriptions__card-features">
+          <li v-for="feature in subscription.features" :key="feature" class="subscriptions__card-feature">{{ feature }}
+          </li>
         </ul>
-        <div v-if="subscription.cta">
-          <a :href="subscription.cta.url" class="cta-button">{{ subscription.cta.label }}</a>
+        <div v-if="subscription.cta" class="subscriptions__card-action">
+          <a :href="subscription.cta.url" class="subscriptions__card-button">{{ subscription.cta.label }}</a>
         </div>
       </div>
     </div>
@@ -32,85 +33,105 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-.subscription-section {
-  font-family: 'Poppins', sans-serif;
+.subscriptions {
+  font-family: $font-family-primary;
   padding: 2rem;
 
-  h2 {
+  &__title {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2.5rem;
-    color: #333;
+    color: $textPrimary;
+    font-weight: $font-weight-bold;
   }
 
-  .cards-container {
+  &__container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     padding: 1rem;
   }
 
-  .subscription-card {
-    background: white;
+  &__card {
+    background: $backgroundColor;
     border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px $shadowColor;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
 
     &:hover {
       transform: translateY(-10px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 25px rgba($shadowColor, 0.15);
     }
 
-    h3 {
+    &-title {
       font-size: 1.8rem;
-      color: #2c3e50;
+      color: $textPrimary;
       margin-bottom: 1rem;
+      font-weight: $font-weight-semibold;
     }
 
-    .price {
+    &-price {
       font-size: 3rem;
-      font-weight: bold;
-      color: #3498db;
+      font-weight: $font-weight-bold;
+      color: $primaryColor;
       margin: 1.5rem 0;
     }
 
-    .description {
-      color: #666;
+    &-description {
+      color: $textSecondary;
       margin-bottom: 2rem;
       line-height: 1.6;
     }
 
-    ul {
+    &-features {
       list-style: none;
       padding: 0;
       margin: 2rem 0;
+    }
 
-      li {
-        padding: 0.5rem 0;
-        color: #555;
+    &-feature {
+      padding: 0.5rem 0;
+      color: $textSecondary;
 
-        &:before {
-          content: "✓";
-          color: #2ecc71;
-          margin-right: 8px;
-        }
+      &::before {
+        content: "✓";
+        color: $primaryColor;
+        margin-right: 8px;
       }
     }
 
-    .cta-button {
+    &-button {
       display: inline-block;
       padding: 1rem 2rem;
-      background: #3498db;
-      color: white;
+      background: $primaryColor;
+      color: $backgroundColor;
       text-decoration: none;
       border-radius: 30px;
-      font-weight: 600;
+      font-weight: $font-weight-semibold;
       transition: background 0.3s ease;
 
       &:hover {
-        background: #2980b9;
+        background: $primaryDark;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__card {
+      &-title {
+        font-size: 1.5rem;
+      }
+
+      &-price {
+        font-size: 2.5rem;
       }
     }
   }
